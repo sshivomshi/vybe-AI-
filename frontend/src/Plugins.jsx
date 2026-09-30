@@ -80,7 +80,7 @@ function PluginEditor({plugin, onClose, onSave}) {
           <p id="plugin-key-help" className="plugin-field-help">An API key is a private access code from your service. {endpointChanged ? 'Changing the service address removes the saved key. Enter a key for the new service if it needs one.' : 'It is encrypted on this device and is never displayed again. Leave it empty if your service does not need one.'}</p>
           {plugin?.has_api_key && <label className="check"><input type="checkbox" checked={form.clear_api_key} onChange={event => setForm(current => ({...current, clear_api_key: event.target.checked, api_key: ''}))}/>Remove saved API key</label>}
           <label className="check"><input type="checkbox" checked={form.enabled} onChange={event => set('enabled', event.target.checked)}/>Allow this connection</label>
-          <details className="plugin-more-details"><summary>More connection details</summary><p>This service must support the OpenAI-compatible chat format. Include /v1 in the address if your service asks for it. Mnemos adds /chat/completions when it connects.</p></details>
+          <details className="plugin-more-details"><summary>More connection details</summary><p>This service must support the OpenAI-compatible chat format. Include /v1 in the address if your service asks for it. Vybe AI adds /chat/completions when it connects.</p></details>
         </fieldset></div>
         {error && <div className="error" role="alert">{error}</div>}
         <div className="actions"><button type="button" disabled={busy} onClick={onClose}>Cancel</button><button className="primary" disabled={busy}>{busy ? 'Saving…' : 'Save connection'}<Check size={16}/></button></div>

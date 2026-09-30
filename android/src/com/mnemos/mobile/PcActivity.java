@@ -30,7 +30,7 @@ public final class PcActivity extends Activity {
         LinearLayout root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL);
         root.setBackgroundColor(Color.rgb(250,251,248));
         LinearLayout bar = new LinearLayout(this); bar.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        bar.addView(text(development ? "Mnemos Dev · Live UI" : "Mnemos · AI & data on your PC",12),new LinearLayout.LayoutParams(0,dp(48),1));
+        bar.addView(text(development ? "Vybe AI Dev · Live UI" : "Vybe AI · AI & data on your PC",12),new LinearLayout.LayoutParams(0,dp(48),1));
         Button help = new Button(this); help.setText("Connect"); help.setTextSize(12);
         help.setOnClickListener(v -> showHelp()); bar.addView(help);
         root.addView(bar);
@@ -42,7 +42,7 @@ public final class PcActivity extends Activity {
         if (development) settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setDomStorageEnabled(true); settings.setAllowFileAccess(false); settings.setAllowContentAccess(false);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        settings.setUserAgentString(settings.getUserAgentString()+" MnemosAndroid/1.0");
+        settings.setUserAgentString(settings.getUserAgentString()+" Vybe AIAndroid/1.0");
         CookieManager.getInstance().setAcceptThirdPartyCookies(web,false);
         web.setWebChromeClient(new WebChromeClient() {
             @Override public void onProgressChanged(WebView view,int value) { progress.setProgress(value); }
@@ -75,7 +75,7 @@ public final class PcActivity extends Activity {
     private void showOffline() { failed=true; web.setVisibility(View.GONE); progress.setVisibility(View.GONE); offline.setVisibility(View.VISIBLE); }
     private void showHelp() {
         new AlertDialog.Builder(this).setTitle("PC connection")
-            .setMessage((development ? "LIVE DEVELOPMENT: Run scripts/start_android_dev.ps1 on your PC. Save React/CSS files to update this app. Java changes need Android Studio Run or Apply Changes.\n\n" : "") + "1. Run the Mnemos server on your PC.\n2. Connect USB and enable USB debugging.\n3. On the PC run scripts\\test_android.ps1.\n4. Tap Reload below.\n\nKeep USB connected. AI and saved data stay on the PC. Reloading clears an unsent draft.")
+            .setMessage((development ? "LIVE DEVELOPMENT: Run scripts/start_android_dev.ps1 on your PC. Save React/CSS files to update this app. Java changes need Android Studio Run or Apply Changes.\n\n" : "") + "1. Run the Vybe AI server on your PC.\n2. Connect USB and enable USB debugging.\n3. On the PC run scripts\\test_android.ps1.\n4. Tap Reload below.\n\nKeep USB connected. AI and saved data stay on the PC. Reloading clears an unsent draft.")
             .setPositiveButton("Reload",(d,w)->load()).setNegativeButton("Close",null).show();
     }
     @Override public void onBackPressed() { if(!failed && web.canGoBack()) web.goBack(); else super.onBackPressed(); }

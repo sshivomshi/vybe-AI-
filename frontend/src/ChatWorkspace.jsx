@@ -51,7 +51,7 @@ export default function ChatWorkspace({inference, onInference, capture, captureB
 
     <div className="easy-composer-section"><form className="easy-composer" onSubmit={onSend}>
       <label htmlFor="chat-message">Message</label>
-      <textarea ref={composer} id="chat-message" disabled={busy} aria-label="Message" placeholder="Message mnemos" rows={3} value={input} onChange={event => setInput(event.target.value)} onKeyDown={event => {if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {event.preventDefault();if (!busy) onSend(event);}}}/>
+      <textarea ref={composer} id="chat-message" disabled={busy} aria-label="Message" placeholder="Message Vybe AI" rows={3} value={input} onChange={event => setInput(event.target.value)} onKeyDown={event => {if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {event.preventDefault();if (!busy) onSend(event);}}}/>
       <div className="easy-composer-actions"><span className="easy-keyboard-hint">Press Enter to send</span><button className="easy-send" disabled={busy || !input.trim()} aria-label="Send message"><span>{busy ? 'Thinking…' : 'Send'}</span><ArrowUp size={18}/></button></div>
     </form><p className="easy-memory-note"><ShieldCheck size={16}/>Memories are saved only after you approve them.</p></div>
 

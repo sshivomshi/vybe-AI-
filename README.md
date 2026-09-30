@@ -1,4 +1,4 @@
-# Mnemos — PS3 Edge Memory
+# Vybe AI — PS3 Edge Memory
 
 An offline-first AI workspace with **real Qdrant Edge**, local ONNX embeddings, SQLite persistence, a local language model, and a version-aware synchronization authority. The React interface includes Chat, Memory Center, Sync Center, conflict review, and settings.
 
@@ -188,7 +188,7 @@ Implementation uses the official [Qdrant Edge API](https://qdrant.tech/documenta
 
 ## Android app: internet chat and phone storage
 
-The Android app uses a midnight/lavender interface and direct HTTPS inference. Conversations and bookmarked replies are stored on the phone; API credentials are encrypted with Android Keystore. There is no API-key form in the app. The debug app can be provisioned over authorized USB with `scripts/verify_gemini_android.py --from-env` and the provisioning instrumentation. Mnemos and Mnemos Dev have separate storage. Neither currently integrates the PC memory or synchronization engine.
+The Android app uses a midnight/lavender interface and direct HTTPS inference. Conversations and bookmarked replies are stored on the phone; API credentials are encrypted with Android Keystore. There is no API-key form in the app. The debug app can be provisioned over authorized USB with `scripts/verify_gemini_android.py --from-env` and the provisioning instrumentation. Vybe AI and Vybe AI Dev have separate storage. Neither currently integrates the PC memory or synchronization engine.
 
 See [current gap-closure report](docs/GAP_CLOSURE.md) for fresh verification, deployment preparation, and remaining limitations.
 

@@ -1,8 +1,8 @@
-# Mnemos — Offline AI Chatbot
+# Vybe AI — Offline AI Chatbot
 
 ## Overview
 
-Mnemos is an offline-first AI workspace that combines chat with persistent, searchable memories. It runs a local device API and browser interface, supports local AI inference, and can optionally connect to cloud AI providers and a synchronization service.
+Vybe AI is an offline-first AI workspace that combines chat with persistent, searchable memories. It runs a local device API and browser interface, supports local AI inference, and can optionally connect to cloud AI providers and a synchronization service.
 
 ## Main features
 
