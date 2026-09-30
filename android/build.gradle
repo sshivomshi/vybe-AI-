@@ -1,0 +1,35 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.mnemos.mobile'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.mnemos.mobile'
+        minSdk 26
+        targetSdk 34
+        versionCode 3
+        versionName '2.0'
+        testInstrumentationRunner 'com.mnemos.mobile.SmokeInstrumentation'
+    }
+    sourceSets {
+        debug { res.srcDirs = ['debug-res'] }
+        androidTest { java.srcDirs = ['checks'] }
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            versionNameSuffix '-dev'
+            debuggable true
+        }
+        release { minifyEnabled false }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}

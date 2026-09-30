@@ -1,0 +1,28 @@
+services:
+  sync:
+    build:
+      context: .
+      dockerfile: Dockerfile.cloud
+    environment:
+      PS3_SYNC_TOKEN: ${PS3_SYNC_TOKEN:?Set a strong private sync token}
+    volumes:
+      - cloud-data:/data
+    restart: unless-stopped
+  proxy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SYNC_DOMAIN: ${SYNC_DOMAIN:?Set your sync hostname}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - sync
+    restart: unless-stopped
+volumes:
+  cloud-data:
+  caddy-data:
+  caddy-config:

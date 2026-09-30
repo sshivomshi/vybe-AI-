@@ -1,0 +1,10 @@
+{
+  "transport": "HTTP",
+  "authority": "http://127.0.0.1:8090",
+  "two_device_sync": true,
+  "conflict_detected": true,
+  "resolved_summary": "Completed backpropagation",
+  "resolved_version": 3,
+  "deletion_propagated": true,
+  "scope": "Development authority, not a public cloud deployment"
+}

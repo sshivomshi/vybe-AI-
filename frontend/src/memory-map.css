@@ -1,0 +1,18 @@
+.simple-app .memory-map { margin: 20px 0; padding: 14px; border: 1px solid #303344; border-radius: 12px; background: #10121c; }
+.memory-map-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.simple-app .memory-map-heading strong { font-size: 14px; color: #eceaf4; }
+.simple-app .memory-map button { padding: 6px 9px; min-height: 34px; font-size: 12px; background: transparent; color: #cfbdfb; }
+.simple-app .memory-map p { margin: 8px 0 0; font-size: 12px; line-height: 1.5; color: #b3aec5; }
+.memory-map svg { width: 100%; display: block; touch-action: pan-y; cursor: grab; overflow: visible; }
+.memory-map svg:active { cursor: grabbing; }
+.map-orbit { fill: none; stroke: #303344; stroke-dasharray: 4 6; }
+.map-link { stroke: #82749f; stroke-width: 1; opacity: .6; }
+.map-dot { fill: #7db9d5; stroke: #d0eaf6; stroke-width: 1.5; }
+.map-node { cursor: pointer; outline: none; }
+.map-node:hover .map-dot, .map-node:focus .map-dot { fill: #cfbdfb; stroke: #fff; stroke-width: 3; }
+.memory-map text { fill: #eceaf4; font-size: 11px; pointer-events: none; }
+.map-halo { fill: #bda7f522; stroke: #bda7f566; }
+.map-center { fill: #bda7f5; stroke: #e1d6ff; stroke-width: 2; }
+.memory-map .map-selected-label { fill: #cfbdfb; font-size: 12px; }
+.memory-map-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.memory-map-controls span { margin-left: auto; font-size: 11px; color: #b3aec5; }

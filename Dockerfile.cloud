@@ -1,0 +1,9 @@
+FROM python:3.12-slim
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi==0.141.1 uvicorn==0.54.0 pydantic-settings==2.15.0
+COPY backend /app/backend
+RUN useradd --create-home ps3 && mkdir /data && chown ps3:ps3 /data
+USER ps3
+ENV PS3_CLOUD_DIR=/data
+EXPOSE 8090
+CMD ["uvicorn", "backend.cloud:app", "--host", "0.0.0.0", "--port", "8090"]

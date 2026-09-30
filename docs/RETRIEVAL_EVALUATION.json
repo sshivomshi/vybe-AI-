@@ -1,0 +1,57 @@
+{
+  "scope": "100 synthetic memories, 10 hand-labeled paraphrases, three timings each; not a production or generated-answer quality evaluation",
+  "top1": 1.0,
+  "recall_at5": 1.0,
+  "results": [
+    {
+      "topic": "Food",
+      "rank": 1,
+      "median_ms": 17.27
+    },
+    {
+      "topic": "Travel",
+      "rank": 1,
+      "median_ms": 15.29
+    },
+    {
+      "topic": "Study",
+      "rank": 1,
+      "median_ms": 15.77
+    },
+    {
+      "topic": "Exercise",
+      "rank": 1,
+      "median_ms": 17.83
+    },
+    {
+      "topic": "Work",
+      "rank": 1,
+      "median_ms": 16.8
+    },
+    {
+      "topic": "Language",
+      "rank": 1,
+      "median_ms": 20.76
+    },
+    {
+      "topic": "Garden",
+      "rank": 1,
+      "median_ms": 18.45
+    },
+    {
+      "topic": "Reading",
+      "rank": 1,
+      "median_ms": 18.33
+    },
+    {
+      "topic": "Code",
+      "rank": 1,
+      "median_ms": 16.97
+    },
+    {
+      "topic": "Music",
+      "rank": 1,
+      "median_ms": 16.15
+    }
+  ]
+}

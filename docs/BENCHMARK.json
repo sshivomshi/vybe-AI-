@@ -1,0 +1,38 @@
+{
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "results": [
+    {
+      "mode": "QUICK",
+      "raw_bytes": 127,
+      "summary_bytes": 33,
+      "vector_value_bytes": 1536,
+      "retrieval_median_ms": 16.26,
+      "retrieval_p95_ms": 19.29,
+      "retrieval_hits": 20,
+      "queries": 20,
+      "scope": "One-memory fixture; relevance hit only, not general QA/faithfulness evaluation"
+    },
+    {
+      "mode": "STANDARD",
+      "raw_bytes": 127,
+      "summary_bytes": 112,
+      "vector_value_bytes": 1536,
+      "retrieval_median_ms": 15.93,
+      "retrieval_p95_ms": 26.28,
+      "retrieval_hits": 20,
+      "queries": 20,
+      "scope": "One-memory fixture; relevance hit only, not general QA/faithfulness evaluation"
+    },
+    {
+      "mode": "DETAILED",
+      "raw_bytes": 127,
+      "summary_bytes": 150,
+      "vector_value_bytes": 1536,
+      "retrieval_median_ms": 15.99,
+      "retrieval_p95_ms": 18.79,
+      "retrieval_hits": 20,
+      "queries": 20,
+      "scope": "One-memory fixture; relevance hit only, not general QA/faithfulness evaluation"
+    }
+  ]
+}

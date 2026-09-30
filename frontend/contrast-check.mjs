@@ -1,0 +1,11 @@
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch({channel:'msedge',headless:true});const p=await browser.newPage({viewport:{width:1440,height:1000}});
+await p.goto('http://127.0.0.1:5173');await p.getByRole('button',{name:'Saved memories',exact:true}).click();await p.getByRole('heading',{name:'Saved memories',exact:true}).waitFor();
+const search=await p.locator('.search').evaluate(e=>getComputedStyle(e).backgroundColor);if(search!=='rgb(25, 28, 41)')throw Error(search);
+await p.screenshot({path:'test-results/contrast-memories.png',fullPage:true});
+await p.getByRole('button',{name:'New memory',exact:true}).click();await p.getByRole('dialog').waitFor();await p.screenshot({path:'test-results/contrast-editor.png',fullPage:true});await p.keyboard.press('Escape');
+await p.getByRole('button',{name:'Settings',exact:true}).click();await p.screenshot({path:'test-results/contrast-settings.png',fullPage:true});
+await p.evaluate(()=>{const section=document.createElement('section');section.className='easy-chat-workspace';section.innerHTML='<div class="recommendation-actions"><button class="primary">Review before saving</button></div>';document.querySelector('.content').append(section)});
+const color=await p.locator('.recommendation-actions .primary').evaluate(e=>({fg:getComputedStyle(e).color,bg:getComputedStyle(e).backgroundColor}));if(color.fg!=='rgb(9, 11, 18)'||color.bg!=='rgb(189, 167, 245)')throw Error(JSON.stringify(color));
+await p.setViewportSize({width:390,height:844});if(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Overflow');
+console.log('PASS: memory search surface, editor open/close, review button colors, mobile settings width.');await browser.close();

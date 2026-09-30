@@ -1,0 +1,74 @@
+/* Shared with Android: PAPER #090b12, surface #191c29, accent #bda7f5. */
+:root{color-scheme:dark;--line:#303344;--ink:#eceaf4;--muted:#9e9aae}
+body,.simple-app,.simple-app>main{background:#090b12;color:#eceaf4}
+.simple-app .sidebar{background:#0e101a;border-color:#252735}
+.simple-app header{background:#090b12;border-color:#202330}
+.simple-app .brand,.simple-app .brandmark,.simple-app .breadcrumb strong{color:#eceaf4}
+.simple-app .sidebar .sidebar-new-chat,.simple-app .primary,.simple-app .easy-chat-workspace .easy-send{background:#bda7f5;border-color:#bda7f5;color:#090b12}
+.simple-app .sidebar .sidebar-new-chat:hover,.simple-app .primary:hover,.simple-app .easy-chat-workspace .easy-send:hover{background:#cfbdfb;border-color:#cfbdfb;color:#090b12}
+.simple-app .sidebar nav button.selected,.simple-app .sidebar nav button:hover,.simple-app .recent .active-chat{background:#242134;color:#d5c5fc}
+.simple-app .sidebar nav button.selected>svg{color:#bda7f5}
+.simple-app .easy-chat-workspace.is-welcome{padding-top:0}
+.simple-app .easy-chat-workspace .easy-welcome{padding:0 0 28px;text-align:center}
+.simple-app .easy-chat-workspace .easy-welcome h1{font-family:inherit;font-size:clamp(28px,3vw,40px);font-weight:550;letter-spacing:-1.2px;color:#eceaf4}
+.simple-app .easy-chat-workspace .easy-welcome p{color:#9e9aae}
+.simple-app .easy-chat-workspace .easy-composer{background:#191c29;border:1px solid #303344;border-radius:28px;box-shadow:0 12px 40px #0003}
+.simple-app .easy-chat-workspace .easy-composer:focus-within{border-color:#bda7f5;box-shadow:0 0 0 3px #bda7f512}
+.simple-app .easy-chat-workspace .easy-composer textarea{color:#eceaf4;min-height:56px}
+.simple-app .easy-chat-workspace .easy-send{border-radius:24px}
+.simple-app .easy-chat-workspace .easy-send:disabled{background:#303344;border-color:#303344;color:#aaa5ba}
+.simple-app .easy-chat-workspace .easy-starters button{background:#131620;border-color:#292c3b;border-radius:18px}
+.simple-app .easy-chat-workspace .easy-starters button:hover{background:#242134;border-color:#6c5a91}
+.simple-app .easy-chat-workspace .easy-starters strong{color:#eceaf4}
+.simple-app .easy-chat-workspace .easy-starters button>svg{color:#bda7f5}
+.simple-app .easy-chat-workspace .message.user{background:#242134;border-radius:22px;padding:18px;margin:12px 0 12px 30px}
+.simple-app .easy-chat-workspace .message p{color:#ddd9e9}
+.simple-app .easy-chat-workspace .message-avatar{background:#242134;color:#bda7f5}
+.simple-app .panel,.simple-app .memory-card,.simple-app .modal,.simple-app .plugin-card{background:#131620;border-color:#303344}
+.simple-app input,.simple-app textarea,.simple-app select{color:#eceaf4;background-color:#191c29;border-color:#303344}
+.simple-app .easy-chat-workspace .easy-composer textarea{background:transparent}
+.simple-app .badge{background:#242134;color:#d5c5fc}
+.simple-app .badge.amber{background:#392d20;color:#f1c47f}
+.simple-app .error{background:#361f29;color:#ffc0cb}
+button,a,input,textarea,summary{transition:background-color .18s,border-color .18s,box-shadow .18s}
+:focus-visible{outline:2px solid #bda7f5;outline-offset:4px}
+.space-scene{height:240px;width:min(100%,540px);margin:0 auto 8px;position:relative;overflow:hidden;isolation:isolate;pointer-events:none}
+.space-stars{position:absolute;inset:0}.space-stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#c7c2e1;animation:starlight 5s ease-in-out infinite}
+.blackhole{position:absolute;left:50%;top:50%;width:160px;height:160px;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 75px 22px #7b5eb51c}
+.event-horizon{position:absolute;inset:0;border-radius:50%;background:#030409;border:2px solid #c2aeff;box-shadow:0 0 7px #bda7f599,inset 0 0 8px #514669;z-index:2}
+.accretion,.orbit-light{position:absolute;inset:-44px;border-radius:50%;transform:rotate(-19deg) scaleY(.28);border:1px solid #bda7f599;box-shadow:0 0 0 4px #bda7f520,0 0 0 9px #bda7f530,0 0 0 14px #bda7f530,0 0 0 20px #bda7f525,0 0 0 27px #bda7f520,0 0 0 34px #bda7f515,0 0 0 42px #bda7f510}
+.orbit-light{z-index:3;border:0;box-shadow:none;background:conic-gradient(from 0deg,transparent 55%,#d9c5ff90 75%,transparent 86%);mask:radial-gradient(transparent 61%,#000 63%,#000 67%,transparent 70%);animation:orbit-drift 24s linear infinite}
+@keyframes orbit-drift{0%{transform:rotate(-19deg) scaleY(.28) rotate(0)}100%{transform:rotate(-19deg) scaleY(.28) rotate(360deg)}}
+@keyframes starlight{0%,100%{opacity:.22}50%{opacity:.8}}
+@media(max-width:700px){.space-scene{height:200px}.blackhole{width:130px;height:130px}.simple-app .easy-chat-workspace .easy-welcome h1{font-size:29px}.simple-app .easy-chat-workspace .easy-starters>div{grid-template-columns:1fr}.simple-app .easy-chat-workspace .easy-starters button{min-height:64px}.simple-app .easy-chat-workspace .easy-welcome{text-align:center}.simple-app .easy-chat-workspace .easy-composer{padding:18px}.header-note{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+body,button,input,textarea,select,.simple-app .easy-chat-workspace .easy-welcome p{font-family:Arial,Helvetica,sans-serif}
+
+/* Explicit control colors prevent older light-theme rules from leaking through. */
+.simple-app button:not(.primary):not(.easy-send):not(.sidebar-new-chat){background-color:#191c29;border-color:#303344;color:#eceaf4}
+.simple-app button:not(.primary):not(.easy-send):not(.sidebar-new-chat):hover{background-color:#272a3c;border-color:#6c5a91;color:#fff}
+.simple-app .sidebar nav button,.simple-app .recent button,.simple-app button.plain,.simple-app button.icon,.simple-app button.back-link{background-color:transparent}
+.simple-app .sidebar nav button.selected{background-color:#242134;color:#d5c5fc}
+.simple-app .search{background:#191c29;border:1px solid #303344;border-radius:16px;padding:8px 10px;gap:10px;min-width:0;align-items:center}
+.simple-app .search input{background:transparent;border:0;min-width:0;color:#eceaf4;padding:8px 0;font-size:15px;box-shadow:none}
+.simple-app input::placeholder,.simple-app textarea::placeholder{color:#a6a1b7;opacity:1}
+.simple-app .toolbar{gap:14px;align-items:stretch;margin:24px 0}
+.simple-app .toolbar>button{border-radius:14px;white-space:normal}
+.simple-app .search button{border-radius:10px;background:#272a3c}
+.simple-app .easy-chat-workspace .recommendation-actions .primary,.simple-app .modal .primary,.simple-app .plugin-editor .primary{background:#bda7f5;border-color:#bda7f5;color:#090b12}
+.simple-app .easy-chat-workspace .recommendation-actions .primary:hover,.simple-app .modal .primary:hover{background:#cfbdfb;border-color:#cfbdfb;color:#090b12}
+.simple-app .easy-chat-workspace .recommendation,.simple-app .conflict-version,.simple-app .used-memory,.simple-app .memory-editor details,.simple-app .plugin-editor details{background:#191c29;border-color:#303344;color:#eceaf4}
+.simple-app .recommendation h4,.simple-app .recommendation>div>strong,.simple-app .modal label,.simple-app .modal h2,.simple-app .modal h3{color:#eceaf4}
+.simple-app .recommendation-actions{gap:12px;flex-wrap:wrap}
+.simple-app .recommendation-actions button{min-height:44px;border-radius:12px}
+.simple-app button:disabled{opacity:.55;cursor:not-allowed}
+.simple-app .modal,.simple-app .plugin-editor{background:#131620;color:#eceaf4;border:1px solid #303344;border-radius:22px}
+.simple-app .modal input,.simple-app .modal textarea,.simple-app .modal select{background:#191c29;border-color:#414458;color:#eceaf4}
+.simple-app .setting-row,.simple-app .settings-links button,.simple-app .conflict,.simple-app .sync-summary{border-color:#303344}
+.simple-app .tags span{background:#242134;color:#d5c5fc}
+.simple-app .memory-card .card-actions{gap:8px;flex-wrap:wrap}
+.simple-app .memory-card .card-actions button{border-radius:10px}
+.simple-app .overlay{background:#030409bb;backdrop-filter:blur(6px)}
+.simple-app .conversation-messages{scrollbar-color:#514967 transparent;scrollbar-width:thin}
+@media(max-width:700px){.simple-app .toolbar{align-items:stretch}.simple-app .toolbar .search{width:100%}.simple-app .recommendation-actions button{flex:1 1 150px}.simple-app .page-heading{flex-wrap:wrap}}

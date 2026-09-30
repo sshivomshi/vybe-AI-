@@ -1,0 +1,23 @@
+.spatial-scene { position: relative; border: 1px solid #303344; border-radius: 16px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%,#1d182a 0%,#090b12 75%); }
+.spatial-scene canvas { display: block; width: 100%; height: min(65vh,620px); min-height: 330px; cursor: grab; touch-action: none; }
+.spatial-scene canvas:active { cursor: grabbing; }
+.spatial-tools { display: flex; gap: 7px; flex-wrap: wrap; padding: 12px; }
+.simple-app .spatial-tools button { font-size: 12px; padding: 7px 11px; min-height: 34px; background: #191c29; }
+.spatial-select { display: flex; align-items: center; gap: 12px; padding: 12px; font-size: 12px; color: #b3aec5; border-top: 1px solid #303344; }
+.spatial-select select { min-width: 0; flex: 1; background: #191c29; color: #eceaf4; border: 1px solid #303344; padding: 8px; border-radius: 8px; }
+.constellation-inspector { margin-top: 16px; padding: 14px 0; border-bottom: 1px solid #303344; }
+.constellation-inspector p { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow-y: auto; }
+.memory-detail-map { margin: 18px 0; }
+.memory-detail-map .spatial-scene canvas { height: 290px; min-height: 0; }
+.save-chat-control { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; color: #b3aec5; cursor: pointer; }
+.save-chat-control input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.save-chat-track { width: 34px; height: 20px; border-radius: 20px; background: #303344; padding: 3px; transition: background .2s; }
+.save-chat-track::after { content: ''; display: block; height: 14px; width: 14px; background: #eceaf4; border-radius: 50%; transition: transform .2s; }
+.save-chat-control input:checked + .save-chat-track { background: #8e71c5; }
+.save-chat-control input:checked + .save-chat-track::after { transform: translateX(14px); }
+.save-chat-control input:focus-visible + .save-chat-track { outline: 2px solid #cfbdfb; outline-offset: 4px; }
+.easy-chat-top { gap: 16px; align-items: center; }
+.easy-save-chat { display:flex; justify-content:flex-end; margin-bottom:12px; }
+@media(prefers-reduced-motion:reduce){.save-chat-track,.save-chat-track::after{transition:none}}
+
+.chat-inference{display:flex;align-items:center;gap:8px;font-size:12px;color:#b3aec5}.chat-inference select{background:#191c29;color:#eceaf4;border:1px solid #45405b;border-radius:8px;padding:8px;max-width:220px}.easy-save-chat,.easy-chat-top{flex-wrap:wrap;gap:14px}.reply-model{display:block;font-size:11px;color:#b3aec5;margin:8px 0}

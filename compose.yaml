@@ -1,0 +1,14 @@
+services:
+  sync:
+    build:
+      context: .
+      dockerfile: Dockerfile.cloud
+    ports:
+      - "127.0.0.1:8090:8090"
+    environment:
+      PS3_SYNC_TOKEN: ${PS3_SYNC_TOKEN:?Set a strong PS3_SYNC_TOKEN}
+    volumes:
+      - cloud-data:/data
+    restart: unless-stopped
+volumes:
+  cloud-data:
