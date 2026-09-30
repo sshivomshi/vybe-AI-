@@ -21,6 +21,113 @@ Vybe AI combines cloud or local AI chat with searchable memories, a spatial cons
 
 **Captured chats and AI memories serve different purposes.** Save chat captures transcripts for visualization. Only approved memories are indexed for future semantic retrieval. Captured transcripts are not automatically synchronized.
 
+## Platform mind maps
+
+### Feature map
+
+```mermaid
+mindmap
+  root((Vybe AI))
+    AI chat
+      Google or compatible provider
+      Explicit local offline mode
+      Conversation history
+      Reply model labels
+    Approved memories
+      Review and edit
+      Memory length and importance
+      Source chat groups
+      Archive and history
+      Local semantic retrieval
+    Constellation
+      Save chat switch
+      Captured conversations
+      Message branches
+      Source linked memories
+      Orbit zoom and focus
+    Device synchronization
+      Persistent outbox
+      Retry and recovery
+      Version checks
+      User reviewed conflicts
+    Privacy
+      Device only memories
+      Backend credentials
+      Local captured transcripts
+```
+
+### Memory and chat capture map
+
+The conversation has two independent saving paths. Capturing a transcript does not approve a memory or add it to semantic retrieval.
+
+```mermaid
+flowchart TD
+    Chat[Conversation] --> Suggest[AI suggests a useful personal detail]
+    Suggest --> Review{User reviews suggestion}
+    Review -->|Approve or edit| Store[Save memory in SQLite]
+    Review -->|Dismiss| Skip[No memory indexed]
+    Store --> Embed[Local ONNX embedding]
+    Embed --> Index[Qdrant Edge semantic index]
+    Index --> Retrieve[Retrieve relevant context for future replies]
+    Store --> Privacy{Device only?}
+    Privacy -->|Yes| Local[Keep local and require local inference]
+    Privacy -->|No| Queue[Durable synchronization queue]
+    Chat --> Toggle{Save chat enabled?}
+    Toggle -->|Yes| Capture[Capture transcript locally]
+    Capture --> Scene[Constellation visualization]
+    Toggle -->|No| History[Normal local chat history only]
+```
+
+### Constellation structure
+
+Relationships come from captured conversations and memory source references. This map describes the data hierarchy; it does not claim that every connection is a semantic relationship.
+
+```mermaid
+mindmap
+  root((Constellation))
+    Captured conversation
+      User messages
+      Assistant replies
+      Source linked memories
+    Other captured conversations
+      Independent message branches
+    Memories without a captured source
+      Direct memory nodes
+    Navigation
+      Drag to orbit
+      Scroll or pinch to zoom
+      Select to focus
+      Expand or collapse
+      Reset view
+```
+
+### Development roadmap
+
+These branches are planned improvements, not completed features.
+
+```mermaid
+mindmap
+  root((Next improvements))
+    Reliable intelligence
+      Extraction quality evaluation
+      Evidence for suggested facts
+      Reviewed cross chat updates
+      Contradiction review
+    Remote synchronization
+      Choose hosting
+      Deploy HTTPS authority
+      Verify independent devices
+      Test interrupted connectivity
+    User experience
+      Streaming responses
+      Generation stage feedback
+      Constellation filters
+    Data control
+      Backup and restore
+      Chat export
+      Scoped memories
+```
+
 ## How the memory workflow works
 
 ```text
@@ -39,6 +146,7 @@ Eligible memory changes → Durable sync queue → Sync authority
 
 ## Contents
 
+- [Platform mind maps](#platform-mind-maps)
 - [Run the prepared workspace](#run-on-this-windows-machine)
 - [Fresh installation](#fresh-installation)
 - [Configuration and AI providers](#configuration)
