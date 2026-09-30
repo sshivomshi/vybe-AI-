@@ -1,6 +1,65 @@
-# Vybe AI — PS3 Edge Memory
+# Vybe AI
 
-An offline-first AI workspace with **real Qdrant Edge**, local ONNX embeddings, SQLite persistence, a local language model, and a version-aware synchronization authority. The React interface includes Chat, Memory Center, Sync Center, conflict review, and settings.
+**An offline-first AI workspace that remembers useful details—with your approval.**
+
+Vybe AI combines cloud or local AI chat with searchable memories, a spatial constellation of saved conversations, and version-aware device synchronization. Local semantic retrieval uses **Qdrant Edge**, ONNX embeddings, and SQLite. The project implements the PS3 AI-Powered Edge Memory & Intelligence Platform workflow.
+
+> **Project status:** Working local prototype. A local backend is required. Public synchronization hosting and standalone phone memory processing are not yet implemented.
+
+## What you can do
+
+| Feature | Experience |
+| --- | --- |
+| AI chat | Use a configured provider such as Google Gemini, or explicitly choose a local model for offline chat. |
+| Reviewed memory | Open a compact suggestion, edit it, and approve it before it becomes searchable. |
+| Semantic search | Find saved details by meaning using locally cached embeddings and Qdrant Edge. |
+| Organized memories | Browse separate source-chat groups, edit details, and inspect history and provenance. |
+| Privacy controls | Keep a memory on this device; conversations using private memories require local inference. |
+| Chat capture | Turn on **Save chat** to capture a conversation into the local constellation. |
+| Constellation | Orbit, zoom, focus, expand, and collapse a perspective-rendered map of chats, messages, and memories. |
+| Device synchronization | Persist changes, retry interrupted operations, and review competing versions. |
+
+**Captured chats and AI memories serve different purposes.** Save chat captures transcripts for visualization. Only approved memories are indexed for future semantic retrieval. Captured transcripts are not automatically synchronized.
+
+## How the memory workflow works
+
+```text
+Conversation → Suggested personal detail → Review and approve
+                                          ↓
+                                    SQLite persistence
+                                          ↓
+                              Local embedding → Qdrant Edge
+                                          ↓
+                              Relevant context for a future reply
+
+Eligible memory changes → Durable sync queue → Sync authority
+                                               ↓
+                                       Version/conflict review
+```
+
+## Contents
+
+- [Run the prepared workspace](#run-on-this-windows-machine)
+- [Fresh installation](#fresh-installation)
+- [Configuration and AI providers](#configuration)
+- [Everyday use and constellation](#everyday-use)
+- [Architecture and memory behavior](#architecture)
+- [Synchronization deployment](#cloud-deployment)
+- [Verification](#verification)
+- [Android scope](#android-app-internet-chat-and-phone-storage)
+
+## Repository guide
+
+| Path | Purpose |
+| --- | --- |
+| `backend/` | Device API, memory lifecycle, AI adapters, persistent storage, and synchronization |
+| `frontend/` | React interface and constellation renderer |
+| `android/` | Android client source and checks |
+| `scripts/` | Setup, local startup, builds, and verification tools |
+| `tests/` | Backend regression tests |
+| `docs/` | Requirements, architecture, demo instructions, and implementation reports |
+
+Local credentials, chat databases, model downloads, signing keys, and generated builds are excluded from Git. Cloning this repository does not include the prepared machine's models or private configuration.
 
 ## Run on this Windows machine
 
@@ -69,7 +128,9 @@ See `.env.example`. `scripts.configure_local` creates a gitignored `.env` with a
 | `PS3_LOCAL_MODEL_URL`, `PS3_LOCAL_MODEL` | OpenAI-compatible local inference |
 | `PS3_CLOUD_MODEL_URL`, `PS3_CLOUD_MODEL`, `PS3_CLOUD_API_KEY` | Optional cloud inference, configured only on the backend |
 
-The app prefers configured cloud inference, falling back to the local model on request failure. Retrieved local-only memories force local inference; conversations that use them remain pinned to local inference. Approving a source-linked local-only memory also pins its source conversation. This cannot retract content already sent before a memory was designated local-only.
+In Chat, **AI mode** selects the configured provider or **Local model · offline**. Local mode requires an installed, running local inference service. Set `PS3_CLOUD_FALLBACK_TO_LOCAL=false` to surface cloud failures without silently switching to local inference; set it to `true` to allow fallback. This option also applies to selected API connections. Provider quota, authentication, and network failures can prevent cloud replies.
+
+Retrieved local-only memories force local inference; conversations that use them remain pinned to local inference. Approving a source-linked local-only memory also pins its source conversation. This cannot retract content already sent before a memory was designated local-only.
 
 ### API plugins
 
@@ -78,7 +139,7 @@ Open **AI connections** in the sidebar (also linked from Settings) to connect an
 1. Choose **Connect a service** and enter a name, API base URL, model ID, and optional API key. Include the provider's API prefix (such as `/v1`), but omit `/chat/completions`.
 2. Save the connection. Saving alone does not select it for chat or make an outbound call.
 3. **Test connection** sends a short synthetic prompt to that model. It does not send your messages or memories; the provider may bill for this small request. Test success verifies a text response, not every provider's structured-output capabilities.
-4. **Use for chat** selects that enabled provider as the default for chat and memory extraction. Other saved plugins receive no traffic. If this provider fails, inference falls back directly to the configured local model. A provider that cannot handle structured memory output can still answer chat while extraction falls back locally.
+4. **Use for chat** selects that enabled provider as the default for chat and memory extraction. Other saved plugins receive no traffic. Provider failures fall back locally only when `PS3_CLOUD_FALLBACK_TO_LOCAL=true`. A provider that cannot handle structured memory output can still answer chat; extraction may fail or fall back depending on that setting.
 5. Edit, enable/disable, or delete connections at any time. Disabling the default clears the selection. With no selected plugin, the existing `.env` routing applies (configured cloud provider, then local model).
 
 HTTPS is required for remote endpoints; HTTP is permitted for explicit loopback APIs such as `http://127.0.0.1:8081/v1`. API plugins support the Chat Completions protocol; arbitrary REST tools and provider-specific noncompatible protocols are outside this feature.
@@ -123,7 +184,7 @@ Code boundaries: `storage.py` (transactions), `vectors.py` (embeddings/index), `
 - Conversation messages are stored locally; they are not automatically indexed or synchronized.
 - AI proposes compact memories. **Review/edit/save** is required to index them; **Don't save** dismisses a suggestion.
 - Quick, Standard, Detailed, and Archive Only are explicit modes. The editor's **More options → Help me rewrite this** produces a reviewable AI rewrite; changing a mode alone does not destructively shorten text.
-- Exact duplicate summaries with the same privacy/mode/archive state reuse the existing memory. Semantic related-memory detection proposes an update, with the prior title, tags and privacy retained. The user approves the evolution.
+- Exact duplicate summaries with the same source chat and privacy/mode/archive state reuse the existing memory. Related-memory detection within a source chat proposes an update, with the prior title, tags and privacy retained. The user approves the evolution. Reviewed cross-chat updates remain future work.
 - Updates carry optimistic version checks. History retains prior values and source references. Source conversations remain on their originating device; another device reports their unavailability rather than fabricating them.
 - Archive Only, archived, and deleted memories are excluded from semantic retrieval. Deletion leaves synchronization tombstones and version history; this is logical deletion, not secure disk erasure.
 - SQLite is authoritative. Index failure preserves the local memory and queue, marks the index dirty, and allows repair/rebuild on search or restart. A model/dimension mismatch is rejected rather than mixed silently.
