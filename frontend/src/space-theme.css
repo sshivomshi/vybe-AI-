@@ -33,6 +33,21 @@ body,.simple-app,.simple-app>main{background:#090b12;color:#eceaf4}
 button,a,input,textarea,summary{transition:background-color .18s,border-color .18s,box-shadow .18s}
 :focus-visible{outline:2px solid #bda7f5;outline-offset:4px}
 .space-scene{height:240px;width:min(100%,540px);margin:0 auto 8px;position:relative;overflow:hidden;isolation:isolate;pointer-events:none}
+.easy-chat-workspace{position:relative;isolation:isolate}
+.space-scene.planet-background{position:absolute;inset:-25px -35px 0;width:auto;height:auto;margin:0;z-index:-1;opacity:.65;overflow:hidden;contain:paint}
+.planet-drift{position:absolute;will-change:transform;animation:planet-float 28s ease-in-out infinite alternate}
+.planet-drift-blue{top:24%;left:-60px;width:180px;height:180px}
+.planet-drift-ringed{right:-55px;top:5%;width:140px;height:140px;animation-duration:38s;animation-delay:-12s}
+.planet-drift-small{right:6%;bottom:13%;width:48px;height:48px;animation-duration:22s;animation-delay:-8s}
+.planet{position:absolute;inset:0;border-radius:50%;overflow:hidden;box-shadow:inset -30px -16px 35px #030409e8,inset 3px 2px 6px #dcddff55,0 0 28px #668de91c}
+.planet-blue{background:radial-gradient(ellipse at 28% 26%,#79c4ce,#315485 44%,#141831 78%)}
+.planet-clouds{position:absolute;inset:-30%;border-radius:50%;background:repeating-linear-gradient(165deg,transparent 0 16px,#b5e4e220 23px,transparent 34px);animation:planet-spin 75s linear infinite}
+.planet-ringed{background:repeating-linear-gradient(165deg,#635276 0 8px,#8b709d 13px,#504969 21px);box-shadow:inset -30px -15px 40px #030409ed,inset 3px 2px 6px #ead9ff66}
+.planet-rings{position:absolute;inset:-35%;border-radius:50%;border:13px solid #bda7f540;box-shadow:0 0 0 5px #bda7f51a,0 0 0 9px #bda7f526;transform:rotate(-28deg) scaleY(.3)}
+.planet-small{background:radial-gradient(circle at 30% 25%,#c49a7d,#694f6c 52%,#181626);box-shadow:inset -10px -6px 14px #030409cc}
+@keyframes planet-float{from{transform:translate3d(0,-15px,0) rotate(-6deg)}to{transform:translate3d(24px,24px,0) rotate(8deg)}}
+@keyframes planet-spin{to{transform:rotate(360deg)}}
+@media(max-width:700px){.space-scene.planet-background{inset:0 -16px;opacity:.4}.planet-drift-blue{left:-90px}.planet-drift-ringed{right:-75px;width:120px;height:120px}}
 .space-stars{position:absolute;inset:0}.space-stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#c7c2e1;animation:starlight 5s ease-in-out infinite}
 .blackhole{position:absolute;left:50%;top:50%;width:160px;height:160px;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 75px 22px #7b5eb51c}
 .event-horizon{position:absolute;inset:0;border-radius:50%;background:#030409;border:2px solid #c2aeff;box-shadow:0 0 7px #bda7f599,inset 0 0 8px #514669;z-index:2}

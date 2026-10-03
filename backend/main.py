@@ -1,11 +1,12 @@
 import asyncio
 import json
 import threading
+from queue import Queue, Empty
 from urllib.parse import urlparse
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.exception_handlers import request_validation_exception_handler
 from fastapi.staticfiles import StaticFiles
@@ -168,7 +169,33 @@ def create_app(settings=None, vectors=None, enable_worker=True):
         # Serialize request receipts with generation so concurrent retries cannot duplicate a turn.
         with chat_lock:
             return perform_chat(value)
-    def perform_chat(value):
+    @app.post('/api/chat/stream')
+    def chat_stream(value: ChatInput):
+        events=Queue()
+        def emit(kind, result): events.put({'type':kind,'result':result})
+        def generate():
+            try:
+                with chat_lock:
+                    result=perform_chat(value,lambda answer:emit('answer',answer))
+                emit('complete',result)
+            except HTTPException as exc:
+                events.put({'type':'error','detail':exc.detail})
+            except Exception:
+                events.put({'type':'error','detail':'The reply could not be completed. Retry your message.'})
+            finally: events.put(None)
+        # Finish and persist the turn even if the browser disconnects; retry receipts
+        # continue to prevent duplicated messages and repeated successful generation.
+        threading.Thread(target=generate,daemon=True).start()
+        def stream():
+            while True:
+                try: event=events.get(timeout=10)
+                except Empty:
+                    yield '\n'
+                    continue
+                if event is None: break
+                yield dump(event)+'\n'
+        return StreamingResponse(stream(),media_type='application/x-ndjson',headers={'Cache-Control':'no-store','X-Accel-Buffering':'no'})
+    def perform_chat(value,on_answer=None):
         request_key='chat-request:'+str(value.request_id) if value.request_id else None
         prior=store.setting(request_key) if request_key else None
         if prior and (prior['content']!=value.content or prior['original_chat']!=value.chat_id):
@@ -197,6 +224,8 @@ def create_app(settings=None, vectors=None, enable_worker=True):
             force_local=value.inference=='local' or privacy_local
             if privacy_local: store.set_setting('chat_local_only:'+chat_id,True)
             response,route=models.complete([{'role':'system','content':prompt}]+[{'role':m['role'],'content':m['content']} for m in history],force_local=force_local)
+            if on_answer:
+                on_answer({'chat_id':chat_id,'response':response,'route':route,'model':settings.local_model if route=='local' else settings.cloud_model if route=='cloud' else None,'memories_used':context})
             try:
                 chat_context=[item for item in context if any(m['memory_id']==item['memory_id'] and m.get('source_chat_id')==chat_id for m in related)]
                 suggestion,_=models.candidate(value.content,chat_context,force_local) if store.setting('preferences',{}).get('memory_enabled',True) else ({},None)
@@ -216,7 +245,11 @@ def create_app(settings=None, vectors=None, enable_worker=True):
                             warnings.append('Review the temporal update carefully; automatic consolidation was inconclusive.')
                         candidate['summary']=revised
                         candidate=MemoryInput.model_validate(candidate).model_dump()
-            except (ValueError,RuntimeError): warnings.append('Memory extraction unavailable. You can save a memory manually.')
+            except (ValueError,RuntimeError) as exc:
+                if 'service temporarily busy' in str(exc):
+                    warnings.append('Your reply is ready, but the AI service is temporarily busy with memory suggestions. You can save a memory manually.')
+                else:
+                    warnings.append('Your reply is ready, but a memory suggestion could not be generated. You can save a memory manually.')
         except RuntimeError as exc: warnings.append(str(exc))
         metadata={'memories_used':context,'route':route,'model':settings.local_model if route=='local' else settings.cloud_model if route=='cloud' else None,'candidate':candidate,'related_id':related_id,'warnings':warnings}
         result={'chat_id':chat_id,'response':response,**metadata}

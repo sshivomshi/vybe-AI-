@@ -24,20 +24,21 @@ function ChatMessage({message, memoryEnabled, onReview, onDismiss}) {
   </article>;
 }
 
-export default function ChatWorkspace({inference, onInference, capture, captureBusy, onCapture, messages, input, setInput, busy, prefs, onSend, onNewChat, onNavigate, onReview, onDismiss}) {
+export default function ChatWorkspace({inference, onInference, capture, captureBusy, onCapture, messages, input, setInput, busy, replyReady, prefs, onSend, onNewChat, onNavigate, onReview, onDismiss}) {
   const composer = useRef(null);
   const conversation = useRef(null);
   const isNew = messages.length === 0;
   const captureSwitch = <><label className="chat-inference">AI mode<select aria-label="AI mode" disabled={busy} value={inference} onChange={event=>onInference(event.target.value)}><option value="configured">Configured AI (Google)</option><option value="local">Local model · offline</option></select></label><label className="save-chat-control" title="Capture this conversation in your local constellation"><input type="checkbox" role="switch" checked={capture} disabled={captureBusy || busy} onChange={event => onCapture(event.target.checked)}/><span className="save-chat-track" aria-hidden="true"/><span>Save chat</span></label></>;
   useEffect(() => {
     if (conversation.current) conversation.current.scrollTop = conversation.current.scrollHeight;
-  }, [messages.length, busy]);
+  }, [messages, busy]);
   const chooseStarter = prompt => {
     setInput(prompt);
     composer.current?.focus();
   };
 
   return <section className={'chat-workspace easy-chat-workspace ' + (isNew ? 'is-welcome' : 'is-conversation')}>
+    <SpaceScene background/>
     {isNew && <div className="easy-save-chat">{captureSwitch}</div>}
     {!isNew && <div className="easy-chat-top">{captureSwitch}<button className="easy-new-chat" disabled={busy} onClick={() => {onNewChat();composer.current?.focus();}}><Plus size={18}/>New chat</button></div>}
     {isNew ? <div className="easy-welcome">
@@ -46,13 +47,13 @@ export default function ChatWorkspace({inference, onInference, capture, captureB
       <p>Big questions. Small ideas. Endless possibilities.</p>
     </div> : <><div className="easy-conversation-heading"><h1>Your conversation</h1></div><div ref={conversation} className="conversation-messages" aria-live="polite">
       {messages.map((message, index) => <ChatMessage key={message.id || index} message={message} memoryEnabled={prefs?.preferences?.memory_enabled !== false} onReview={onReview} onDismiss={onDismiss}/>)}
-      {busy && <div className="processing" role="status"><span className="pulse"/>Thinking about your message…</div>}
+      {busy && <div className="processing" role="status"><span className="pulse"/>{replyReady ? 'Reply ready · checking for useful memories…' : 'Waiting for your AI reply…'}</div>}
     </div></>}
 
     <div className="easy-composer-section"><form className="easy-composer" onSubmit={onSend}>
       <label htmlFor="chat-message">Message</label>
       <textarea ref={composer} id="chat-message" disabled={busy} aria-label="Message" placeholder="Message Vybe AI" rows={3} value={input} onChange={event => setInput(event.target.value)} onKeyDown={event => {if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {event.preventDefault();if (!busy) onSend(event);}}}/>
-      <div className="easy-composer-actions"><span className="easy-keyboard-hint">Press Enter to send</span><button className="easy-send" disabled={busy || !input.trim()} aria-label="Send message"><span>{busy ? 'Thinking…' : 'Send'}</span><ArrowUp size={18}/></button></div>
+      <div className="easy-composer-actions"><span className="easy-keyboard-hint">Press Enter to send</span><button className="easy-send" disabled={busy || !input.trim()} aria-label="Send message"><span>{busy ? (replyReady ? 'Finishing…' : 'Thinking…') : 'Send'}</span><ArrowUp size={18}/></button></div>
     </form><p className="easy-memory-note"><ShieldCheck size={16}/>Memories are saved only after you approve them.</p></div>
 
     {isNew && <section className="easy-starters" aria-label="Ideas to get started"><h2>A place to start</h2><div>{starters.map(({icon: Icon, title, description, prompt}) => <button key={title} onClick={() => chooseStarter(prompt)}><Icon size={21} strokeWidth={1.7}/><span><strong>{title}</strong><span>{description}</span></span><ArrowRight size={17}/></button>)}</div></section>}

@@ -1,7 +1,7 @@
 import React, {useState,useEffect,useRef} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Brain,MessageSquare,Database,RefreshCw,Settings,Plus,ArrowUp,ArrowRight,Search,ShieldCheck,WifiOff,Wifi,Check,Clock,Archive,Trash2,PenLine,X,AlertTriangle,GitBranch,HardDrive,Sparkles,ChevronRight,BookOpen,Plug,Fingerprint,Menu} from 'lucide-react';
-import {api,write,fields} from './api';
+import {api,write,fields,streamChat} from './api';
 import Plugins from './Plugins';
 import ChatWorkspace from './ChatWorkspace';
 import MemoryMap from './MemoryMap';
@@ -37,11 +37,12 @@ function App(){
  const act=async(fn,message)=>{try{await fn();if(message)setToast(message);await refresh();if(page==='Memory Center')await loadMemories()}catch(e){setError(e.message)}};
  const openChat=async id=>{pendingRequest.current=null;setInput('');try{setMessages(await api('/chats/'+id));setChatId(id);setCapture(chats.find(c=>c.id===id)?.capture||false);setPage('Chat')}catch(e){setError(e.message)}};
  const pendingRequest=useRef(null);
+ const [replyReady,setReplyReady]=useState(false);
  const send=async e=>{e.preventDefault();if(!input.trim()||busy)return;const content=input;
  if(!pendingRequest.current||pendingRequest.current.content!==content){pendingRequest.current={content,chat_id:chatId,request_id:crypto.randomUUID(),capture};setMessages(ms=>[...ms,{role:'user',content,metadata:{}}]);}
  pendingRequest.current.inference=inference;
- setBusy(true);setError('');
- try{const result=await write('/chat',pendingRequest.current);setChatId(result.chat_id);setMessages(await api('/chats/'+result.chat_id));if(result.response){setInput('');pendingRequest.current=null;}if(result.warnings.length)setError(result.warnings.join(' '));await refresh();}
+ setBusy(true);setReplyReady(false);setError('');
+ try{const result=await streamChat(pendingRequest.current,answer=>{setReplyReady(true);setMessages(ms=>[...ms.filter(m=>!m.preview),{role:'assistant',content:answer.response,metadata:answer,preview:true}]);});setChatId(result.chat_id);setMessages(await api('/chats/'+result.chat_id));if(result.response){setInput('');pendingRequest.current=null;}if(result.warnings.length)setError(result.warnings.join(' '));void refresh();}
  catch(e){setError(e.message+' Your draft is kept. Send again to retry.');}finally{setBusy(false)}};
  const save=async value=>{if(editor?.resolve){await write('/conflicts/'+editor.resolve+'/resolve',{method:'MERGE',merged:value})}else if(editor?.memory_id){await write('/memories/'+editor.memory_id,{...value,expected_version:editor.version},'PUT')}else{await write('/memories',value)}setToast(editor?.memory_id?'Memory updated':'Memory saved');await refresh();await loadMemories()};
  const recommend=candidate=>setEditor({...candidate,review:true});
@@ -63,7 +64,7 @@ function App(){
  </aside>
  <main><header><button className="mobile-menu icon" aria-label={menuOpen?"Close navigation":"Open navigation"} aria-expanded={menuOpen} aria-controls="app-sidebar" onClick={()=>setMenuOpen(!menuOpen)}><Menu size={22}/></button><div className="breadcrumb"><span>Your workspace</span><ChevronRight size={14}/><strong>{pageLabels[page]}</strong></div><span className="header-note"><ShieldCheck size={15}/>{status.services ? `Local app ready · ${status.services.sync_scope === 'LOCAL' ? 'Local sync server' : 'Remote sync'} · AI: ${status.services.ai_last_route === 'NOT_TESTED' ? 'not tested yet' : status.services.ai_last_route}` : 'Connecting to local app…'}</span></header>
  <div className="content">{error&&<div role="alert" className="error global-error"><AlertTriangle size={17}/><span>{error}</span><button className="icon" aria-label="Dismiss error" onClick={()=>setError('')}><X size={16}/></button></div>}
- {page==='Chat'&&<ChatWorkspace inference={inference} onInference={setInference} capture={capture} captureBusy={captureBusy} onCapture={toggleCapture} messages={messages} input={input} setInput={setInput} busy={busy} status={status} prefs={prefs} onSend={send} onNewChat={startChat} onNavigate={setPage} onReview={(candidate,related)=>act(async()=>{if(related){const all=await api('/memories');const found=all.find(x=>x.memory_id===related);recommend(found?{...found,...candidate,local_only:found.local_only}:candidate)}else recommend(candidate)})} onDismiss={message=>act(async()=>{await api('/messages/'+message.id+'/candidate',{method:'DELETE'});setMessages(await api('/chats/'+chatId))},'Suggestion dismissed')}/>}
+ {page==='Chat'&&<ChatWorkspace inference={inference} onInference={setInference} capture={capture} captureBusy={captureBusy} onCapture={toggleCapture} messages={messages} input={input} setInput={setInput} busy={busy} replyReady={replyReady} status={status} prefs={prefs} onSend={send} onNewChat={startChat} onNavigate={setPage} onReview={(candidate,related)=>act(async()=>{if(related){const all=await api('/memories');const found=all.find(x=>x.memory_id===related);recommend(found?{...found,...candidate,local_only:found.local_only}:candidate)}else recommend(candidate)})} onDismiss={message=>act(async()=>{await api('/messages/'+message.id+'/candidate',{method:'DELETE'});setMessages(await api('/chats/'+chatId))},'Suggestion dismissed')}/>}
  {page==='Constellation'&&<Constellation/>}
  {page==='Memory Center'&&<>
  <div className="page-heading"><div><h1>Saved memories</h1><p>Things you want the assistant to remember for your next chat.</p></div><button className="primary" onClick={()=>setEditor({...blank,memory_type:prefs?.preferences.default_type||'STANDARD'})}><Plus size={17}/>New memory</button></div>
